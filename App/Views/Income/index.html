@@ -1,0 +1,76 @@
+{% extends "base2.html" %}
+
+{% block title %}Przychody{% endblock %}
+
+{% block body %}
+
+<main>
+	
+	<section>
+		
+		<div class="container col-11 col-lg-5 text-center mt-5">
+		
+			<header>
+					<h3 class="h4 mt-4">Dodawanie przychodu</h3>
+			</header>
+			
+			
+			
+				<form action="/income/create" method="post">
+				
+				<div class="input-center">
+					<span class="span-style">
+						<i class="bi bi-wallet-fill"></i>
+					</span>
+					<div class="input-style" style="float: left;">
+						<input type="number" class="form-control"  placeholder="Kwota" min="0" max="999999.99" step="0.01" aria-label="kwota" id="amount" name="amount" value="{{ income.amount }}"  required autofocus >
+					</div>
+					<div class="clearclass">
+					</div>
+				</div>
+				
+				<div class="input-center">
+					<span class="span-style">
+						<i class="bi bi-calendar"></i>
+					</span>
+					<div class="input-style" style="float: left;">
+						<input id="transactionDate" type="date" class="form-control" aria-label="data" name="incomeDate"  value="{{ todaysDate }}" min="2000-01-01" max="{{ lastDate }}"  required>
+					</div>
+					<div class="clearclass">
+					</div>
+				</div>
+				
+				<div class="input-center">
+					<span class="span-style">
+						<i class="bi bi-cart"></i>
+					</span>
+					<div class="input-style" style="float: left;">
+						<select id="expensesCategory" data-live-search="true" name="incomeCategory">
+							{% for userIncome in userIncomes %}
+								<option>{{ userIncome.name }}</option>
+							{% endfor %}		
+							<option>Inne</option>
+						</select>
+					</div>
+					<div class="clearclass">
+					</div>	
+				</div>
+				
+					<div style="margin-top: 15px;">
+						<div><label for="comment"> Komentarz (opcjonalnie):</label></div>
+						<textarea  name="comment" id="comment" rows="4" cols="80" maxlength="120" minlength="1"></textarea>
+					</div>
+					<div style="margin-bottom: 30px;">
+						<input id="a1" type="submit" value="Dodaj">
+						<input id="a2" type="reset" value="Anuluj">
+					</div>
+					
+				</form>
+
+		</div>
+		
+	</section>
+	
+</main>
+
+{% endblock %}

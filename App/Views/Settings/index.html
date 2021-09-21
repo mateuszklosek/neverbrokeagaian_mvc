@@ -1,0 +1,644 @@
+{% extends "base2.html" %}
+
+{% block title %}Witamy{% endblock %}
+
+{% block body %}
+
+<script src="/js/sortTable.js"></script>
+	<script src="/js/app.js"></script>
+	<script src="/js/script.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+	
+
+
+
+	<script>
+
+		$(document).ready(function() {
+			$('.editIncomeBtn').on('click',function() {
+				$('#editIncomeModal').modal('show');
+				
+				$tr = $(this).closest('tr');
+				var data = $tr.children("td").map(function() {
+					return $(this).text();
+				}).get();
+				
+				$('#incomeCategoryModal').val(data[0]);
+				$('#incomeCategoryIdModal').val(data[2]);
+				
+			});			
+			
+			$('.editExpenseBtn').on('click',function() {
+				$('#editExpenseModal').modal('show');
+				
+				$tr = $(this).closest('tr');
+				var data = $tr.children("td").map(function() {
+					return $(this).text();
+				}).get();
+				
+				$('#expenseCategoryModal').val(data[0]);
+				$('#expenseCategoryIdModal').val(data[2]);
+				
+			});			
+			
+			$('.editPaymentBtn').on('click',function() {
+				$('#editPaymentModal').modal('show');
+				
+				$tr = $(this).closest('tr');
+				var data = $tr.children("td").map(function() {
+					return $(this).text();
+				}).get();
+				
+				$('#paymentModal').val(data[0]);
+				$('#paymentIdModal').val(data[2]);
+				
+			});
+			
+			var userId = '{{ user.id }}';
+			
+			$('#editProfileForm').validate( {
+				errorClass: 'text-danger',
+				rules: {
+					email: {
+						required: true,
+						email: true,
+						remote: {
+							url: '/account/validate-email',
+							data: {
+								ignore_id: function() {
+									return userId;
+								}
+							}
+						}
+					},
+					name: {
+						maxlength: 20
+					}	
+				},
+				messages: {
+					email: {
+						required: "Pole nie może być puste.",
+						email: "Prosze wpisać poprawny adres e-mail.",
+						remote: "Podany adres e-mail jest zajęty."
+					}, 
+					name: {
+						required: "Pole nie może być puste.",
+						maxlength: "Imię może mieć długość maksymalnie 20 znaków."
+					}
+				},
+				errorPlacement: function ($error, $element) {
+					var name = $element.attr("name");
+
+					$("#error" + name).append($error);
+				}
+
+			});	
+			
+			$('#editPasswordForm').validate( {
+				errorClass: 'text-danger',
+				rules: {
+
+					password: {
+						required: true,
+						minlength: 6,
+						maxlength: 20,
+						validPassword: true
+					},
+					oldPassword: {
+						remote: {
+							url: '/account/validate-password',
+							data: {
+								user_id: function() {
+									return userId;
+								}								
+							}
+						}
+					}
+				},
+				messages: {
+					password: {
+						required: "Pole nie może być puste.",
+						minlength: "Hasło musi składać się z co najmniej 6 znaków.",
+						maxlength: "Hasło musi składać się z maksymalnie 20 znaków."
+					},					
+					oldPassword: {
+						required: "Pole nie może być puste.",
+						remote: "Wprowadzone hasło jest niepoprawne."
+					}
+				},
+				errorPlacement: function ($error, $element) {
+					var name = $element.attr("name");
+
+					$("#error" + name).append($error);
+				}
+
+			});			
+			
+			
+		});
+		
+
+
+
+	</script>
+
+	
+	
+
+<main>
+
+	<section>
+		
+		<div class="container col-11 col-lg-5 text-center mt-5">
+		
+			<header>
+					<h3 class="h4 my-4">Ustawienia</h3>
+			</header>
+			
+			
+				<div id="accordion">
+				
+					<div class="card bg-dark">
+						<div class="card-header" id="headingOne">
+						  <h5 class="mb-0">
+							<button class="btn btn-light collapsed btn-block font-weight-bold" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							  <i class="fa setting-icon" aria-hidden="true"></i> 
+							  Kategorie przychodów
+							</button>
+						  </h5>
+						</div>
+						
+					
+						<!-- Przychody -->
+						
+						<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+						  <div class="card-body text-left">
+						  
+							<table id="tableOfIncomesCategories" class="table table-hover table-active text-white table-sm table-text">
+							
+								<thead>	
+									<tr>
+									<th onclick="sortTableAlphabetically('tableOfIncomesCategories')" scope="col">Kategoria <i class="demo-icon icon-arrow-combo"></i></th>
+									<th scope="col" style="width: 5%"></th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									{% for userIncome in userIncomes %}
+										<tr class="editIncomeBtn">
+											<td>{{ userIncome.name }}</td>
+											<td> <i class="bi bi-pencil-square edit-icon"></i></td>
+											<td style="display:none;">{{ userIncome.id }}</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>		
+						  
+							<button type="button" class="btn btn-secondary btn-block font-weight-bold" data-toggle="modal" data-target="#nowa-kategoria-1">
+							<i class="bi bi-plus-circle float-left"></i>
+							  Dodaj nową kategorię
+							</button>
+							
+						  </div>
+						</div>
+					 </div>
+					 
+					<div class="modal fade" id="editIncomeModal" tabindex="-1" role="dialog" aria-labelledby="edytujKategoriePrzychodu" aria-hidden="true" >
+						<div class="modal-dialog" role="document">
+							<div class="modal-content text-dark">
+								<div class="modal-header">
+									<h4 id="edytujKategoriePrzychodu" class="modal-title">Edytuj kategorię przychodów</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form action="" method="post" id='editIncomeForm'>
+									<div class="modal-body">
+											
+										<input type="hidden" id="incomeCategoryIdModal" name="incomeCategoryId">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
+											</div>
+											<input type="text" id="incomeCategoryModal" class="form-control"  placeholder="Kategoria przychodów" maxlength="40" step="any" aria-label="KategoriaPrzychodu" name="incomeCategory" required >
+										</div>
+	
+									</div>
+																		
+									<div class="modal-footer">
+										<button id="incomeModalSubmit" formaction="/settings/updateIncomeCategory"  type="submit" class="btn btn-secondary">Potwierdź</button>
+										<button type="submit" formaction="/settings/deleteIncomeCategory" class="btn btn-dark">Usuń kategorię</button>
+									</div>
+									
+								</form>	
+							</div>
+							
+						</div>
+					</div>	
+					
+					<div class="modal fade" id="nowa-kategoria-1" tabindex="-1" role="dialog" aria-labelledby="addIncomeCategory" aria-hidden="true" >
+						<div class="modal-dialog" role="document">
+							<div class="modal-content text-dark">
+								<div class="modal-header">
+									<h4 id="addIncomeCategory" class="modal-title">Dodaj kategorię przychodów</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form action="/settings/addIncomeCategory" method="post" id="newIncomeCategoryForm">
+									<div class="modal-body">
+											
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
+											</div>
+											<input type="text" class="form-control"  placeholder="Kategoria przychodów" maxlength="40" step="any" aria-label="KategoriaPrzychodu" name="newIncomeCategory" required >
+										</div>
+									</div>
+																		
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-dark">Potwierdź</button>
+									</div>
+								</form>	
+							</div>
+						</div>
+					</div>	
+					
+					<!-- Wydatki -->
+				  
+					<div class="card bg-dark">
+						<div class="card-header" id="headingTwo">
+						  <h5 class="mb-0">
+							<button class="btn btn-light collapsed btn-block font-weight-bold" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							  <i class="fa setting-icon" aria-hidden="true"></i> 
+							  Kategorie wydatków
+							</button>
+						  </h5>
+						</div>
+						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+						    <div class="card-body  text-left">
+						  
+								<table id="tableOfExpensesCategories" class="table table-hover table-active text-white table-sm table-text">
+							
+									<thead>	
+										<tr>
+										<th onclick="sortTableAlphabetically('tableOfExpensesCategories')" scope="col">Kategoria <i class="demo-icon icon-arrow-combo"></i></th>
+										<th scope="col" style="width: 5%"></th>
+										</tr>
+									</thead>
+									
+									<tbody>
+										{% for userExpense in userExpenses %}
+										<tr class="editExpenseBtn">
+											<td>{{ userExpense.name }}</td>
+											<td><i class="bi bi-pencil-square edit-icon"></i></td>
+											<td style="display:none;">{{ userExpense.id }}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>		
+							  		
+								<button type="button" class="btn btn-secondary btn-block font-weight-bold" data-toggle="modal" data-target="#nowa-kategoria-2">
+									<i class="bi bi-plus-circle float-left"></i>
+								  Dodaj nową kategorię
+								</button>
+								
+						    </div>
+						</div>
+					</div>
+					
+					<div class="modal fade" id="editExpenseModal" tabindex="-1" role="dialog" aria-labelledby="edytujKategorieWydatku" aria-hidden="true" >
+						<div class="modal-dialog" role="document">
+							<div class="modal-content text-dark">
+								<div class="modal-header">
+									<h4 id="edytujKategorieWydatku" class="modal-title">Edytuj kategorię wydatków</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form action="" method="post" id='editIncomeForm'>
+									<div class="modal-body">
+										<input type="hidden" id="expenseCategoryIdModal" name="expenseCategoryId">
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
+											</div>
+											<input type="text" id="expenseCategoryModal" class="form-control"  placeholder="Kategoria wydatków" maxlength="40" step="any" aria-label="KategoriaWydatków" name="expenseCategory" required >
+										</div>		
+									</div>
+																		
+									<div class="modal-footer">
+										<button id="incomeModalSubmit" formaction="/settings/updateExpenseCategory"  type="submit" class="btn btn-secondary">Potwierdź</button>
+										<button type="submit" formaction="/settings/deleteExpenseCategory" class="btn btn-dark">Usuń kategorię</button>
+									</div>
+									
+								</form>	
+							</div>
+							
+						</div>
+					</div>							
+					
+					<div class="modal fade " id="nowa-kategoria-2" tabindex="-1" aria-labelledby="addExpenseCategory" aria-hidden="true">
+						  <div class="modal-dialog modal-dialog-centered " role="document">
+							<div class="modal-content text-dark">
+							  <div class="modal-header">
+								<h4 class="modal-title" id="addExpenseCategory">Dodaj kategorię wydatków</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+							  </div>
+							  
+							    <form action="/settings/addExpenseCategory" method="post" id="newExpenseCategoryForm">
+								    <div class="modal-body">
+										<div class="input-group input-group-lg">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
+											</div>
+											<input type="text" class="form-control" placeholder="Ktegoria wydatków" aria-label="KategoriaWydatku" name="newExpenseCategory"  required>
+										</div>
+									  </div>
+									  
+									  <div class="modal-footer">
+										<button type="submit" class="btn btn-dark">Dodaj</button>
+									  </div>
+									</form>	
+							    </div>
+						  </div>
+					</div>
+					
+					<!-- Metody Platnosci -->
+					
+				  <div class="card bg-dark">
+					<div class="card-header" id="headingThree">
+					  <h5 class="mb-0">
+						<button class="btn btn-light collapsed btn-block font-weight-bold" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						  <i class="fa setting-icon" aria-hidden="true"></i> 
+						  Sposoby płatności
+						</button>
+					  </h5>
+					</div>
+					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					  <div class="card-body  text-left">
+						
+						<table id="tableOfPaymentCategories" class="table table-hover table-active text-white table-sm table-text">
+							
+								<thead>	
+									<tr>
+									<th onclick="sortTableAlphabetically('tableOfPaymentCategories')" scope="col">Kategoria <i class="demo-icon icon-arrow-combo"></i></th>
+									<th scope="col" style="width: 5%"></th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									{% for paymentMethod in paymentMethods %}
+									<tr class="editPaymentBtn"><td>{{ paymentMethod.name }}</td>
+									<td><i class="bi bi-pencil-square edit-icon"></i></td>
+									<td style="display:none;">{{ paymentMethod.id }}</td></tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							
+							<button type="button" class="btn btn-secondary btn-block font-weight-bold" data-toggle="modal" data-target="#nowa-kategoria-3">
+								<i class="bi bi-plus-circle float-left"></i>
+							  Dodaj nową kategorię
+							</button>
+					  </div>
+					</div>
+				  </div>
+				  
+				  <div class="modal fade" id="editPaymentModal" tabindex="-1" role="dialog" aria-labelledby="edytujMetodePlatnosci" aria-hidden="true" >
+						<div class="modal-dialog" role="document">
+							<div class="modal-content text-dark">
+								<div class="modal-header">
+									<h4 id="edytujMetodePlatnosci" class="modal-title">Edytuj metodę płatności</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form action="" method="post" id='editIncomeForm'>
+									<div class="modal-body">
+										<input type="hidden" id="paymentIdModal" name="paymentId">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="fas fa-money-check"></i></span>
+											</div>
+											<input type="text" id="paymentModal" class="form-control"  placeholder="Metoda płatności" maxlength="30" step="any" aria-label="MetodaPlatnosci" name="paymentCategory" required >
+										</div>
+									</div>		
+									
+									<div class="modal-footer">
+										<button formaction="/settings/updatePaymentMethod"  type="submit" class="btn btn-secondary">Potwierdź</button>
+										<button type="submit" formaction="/settings/deletePaymentMethod" class="btn btn-dark">Usuń metodę</button>
+									</div>
+								</form>	
+							</div>
+							
+						</div>
+					</div>			
+
+					<div class="modal fade" id="nowa-kategoria-3" tabindex="-1" role="dialog" aria-labelledby="dodajMetodePlatnosci" aria-hidden="true" >
+						<div class="modal-dialog" role="document">
+							<div class="modal-content text-dark">
+								<div class="modal-header">
+									<h4 id="dodajMetodePlatnosci" class="modal-title">Dodaj metodę płatności</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form action="" method="post" id='addIncomeForm'>
+									<div class="modal-body">
+											
+										<input type="hidden" id="paymentIdModal" name="paymentId">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
+											</div>
+											<input type="text" class="form-control"  placeholder="Metoda płatności" maxlength="30" step="any" aria-label="MetodaPlatnosci" name="paymentCategory" required >
+										</div>
+	
+									</div>
+																		
+									<div class="modal-footer">
+										<button formaction="/settings/addPaymentMethod"  type="submit" class="btn btn-dark">Potwierdź</button>
+									</div>
+									
+								</form>	
+							</div>
+							
+						</div>
+					</div>	
+					
+					<!-- Zarzadzanie kontem -->
+						
+				  
+				    <div class="card bg-dark mb-5">
+						<div class="card-header" id="headingFour">
+						  <h5 class="mb-0">
+							<button class="btn btn-light collapsed btn-block font-weight-bold" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+							  <i class="fa setting-icon" aria-hidden="true"></i> 
+							  Zarządzaj kontem
+							</button>
+						  </h5>
+						</div>
+						
+						<div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+						    <div class="card-body">
+								<div class="mb-3">
+									<button type="button" data-toggle="modal" data-target="#editProfileModal" class="btn btn-secondary">Edytuj profil</button>
+								</div>
+								
+								<div class="mb-3">
+									<button type="button" data-toggle="modal" data-target="#changePasswordModal" class="btn btn-secondary">Zmień hasło</button>
+								</div>
+								
+								<div>
+									<button type="button" data-toggle="modal" data-target="#deleteAccountModal" class="btn btn-danger">Usuń konto</button>
+								</div>
+						    </div>
+						</div>
+				    </div>
+						
+					<!-- Edycja profilu -->
+					
+				    <div class="modal fade " id="editProfileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered ">
+							<div class="modal-content text-dark">
+							    <div class="modal-header">
+									<h4 class="modal-title" id="exampleModalLabel">Edytuj profil</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+							    </div>
+								
+							    <form action="/settings/updateProfileData" method="post" id='editProfileForm'>
+									<div class="modal-body">
+										<div class="input-group input-group-lg mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="demo-icon icon-user"></i></span>
+											</div>
+											<input type="text" class="form-control" aria-label="nowe imię" value="{{ user.name }}" name="name" required>
+										</div>
+										<small id="errorname"></small>	
+										
+										<div class="input-group input-group-lg">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="demo-icon icon-mail-alt"></i> </span>
+											</div>
+											<input type="email" class="form-control" aria-label="nowy e-mail" value="{{ user.email }}"  name="email"  required>
+											<input type="hidden" value="{{ user.id }}" name ="id" required >
+										</div>
+										<small id="erroremail"></small>	
+									</div>
+									  
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-dark">Zapisz</button>
+									</div>
+								</form>
+								
+							</div>
+						</div>
+					</div>
+
+						<!-- Usunięcie konta-->
+
+					<div class="modal fade " id="deleteAccountModal" tabindex="-1" aria-labelledby="zmianaHasła" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered ">
+							<div class="modal-content text-dark">
+								  <div class="modal-header">
+									<h4 class="modal-title" id="exampleModalLabel">Usuń konto</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								  </div>
+								  
+								<form method="post" action="/settings/deleteAccount">
+									<div class="modal-body">
+									
+										<div class="input-group input-group-lg">
+												Czy napewno chcesz usunąć konto? 
+												<input type="hidden" name="deleteAccount">
+										</div>
+										
+									</div>
+									  
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-danger" >Potwierdź</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					
+					
+				
+					<!-- Edycja hasła -->
+					
+					<div class="modal fade " id="changePasswordModal" tabindex="-1" aria-labelledby="zmianaHasła" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered ">
+							<div class="modal-content text-dark">
+								  <div class="modal-header">
+									<h4 class="modal-title" id="exampleModalLabel">Zmień hasło</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								  </div>
+								  
+								<form method="post" action="/settings/changePassword" id="editPasswordForm">
+									<div class="modal-body">
+									
+										<div class="input-center">
+											<span class="span-style">
+												<i class="demo-icon icon-lock"></i>
+											</span>
+											
+											<div class="input-password">
+												<input type="password" class="form-control" data-toggle="password" placeholder="Stare hasło" aria-label="Stare hasło" id="oldPassword" name="oldPassword" required>
+												<i class="demo-icon icon-eye" onClick="showPwd('oldPassword', this)"></i> 
+											</div>
+											
+											<div class="clearclass">
+											</div>
+										</div>
+										
+										<small id="erroroldPassword"></small>
+										
+										<div class="input-center">
+											<span class="span-style">
+												<i class="demo-icon icon-lock"></i>
+											</span>
+											
+											<div class="input-password">
+												<input type="password" class="form-control" data-toggle="password" placeholder="Nowe hasło" aria-label="Nowe hasło" id="password" name="password" required>
+												<i class="demo-icon icon-eye" onClick="showPwd('password', this)"></i> 
+											</div>
+											
+											<div class="clearclass">
+											</div>
+										</div>
+										
+										
+										<small id="errorpassword"></small>
+											
+									</div>
+									  
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-dark" >Zapisz</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+		</div>
+
+	</section>
+
+
+
+</main>
+	
+{% endblock %}

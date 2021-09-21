@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+	{% if current_user %}
+	
+		
+	
+		<!-- Hello {{current_user.name}}.
+		
+		<a href="/logout">Log out</a>  --->
+
+	{% else %}
+	
+	<body>
+
+		<main>
+		
+			<div class="container col-11 col-lg-6 col-xl-4 text-center">
+			
+				<header>
+					<a href="/"> 
+						<img class="img-fluid mt-5 border rounded" src="/img/Logo1.png" alt="logo">
+					</a>
+				</header>
+				
+				<section>
+				
+					<div class="row mt-5 mb-5">
+					
+							<header style="width: 100%" class="text-center">
+								<h1 class="h4" style="margin-top:45px;"> Witaj w aplikacji Never Broke Again </h1>
+							</header>
+							
+							<span class="menu-span">
+								Nie masz konta? <a href="/signup/new">Zarejestruj się!</a>
+							</span>
+													
+							<span class="menu-span mb-4">
+								Posiadasz już konto? <a href="/login/new">Zaloguj się!</a>
+							</span>
+						
+					</div>
+					
+				</section>
+				
+			</div>
+		
+
+		</main>
+		
+	</body>		
+		
+		
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+
+	{% endif %}
+
+
+{% endblock %}

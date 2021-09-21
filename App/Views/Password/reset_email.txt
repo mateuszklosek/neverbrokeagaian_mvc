@@ -1,0 +1,5 @@
+Resetowanie hasła
+
+Proszę kliknij w link aby zresetoać hasło:
+
+{{ url }}

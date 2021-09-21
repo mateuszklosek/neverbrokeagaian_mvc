@@ -1,0 +1,461 @@
+{% extends "base2.html" %}
+
+{% block title %}Balans{% endblock %}
+
+{% block body %}
+
+<script src="/js/sortTable.js"></script>
+<script src="https://cdn.anychart.com/js/8.0.1/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/js/8.0.1/anychart-pie.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+
+<script>
+
+$(document).ready(function() {
+		$('.editIncomeBtn').on('click',function() {
+			$('#editIncomeModal').modal('show');
+			
+			$tr = $(this).closest('tr');
+			var data = $tr.children("td").map(function() {
+				return $(this).text();
+			}).get();
+			
+			$('#incomeCategoryModal').val(data[0]);
+			$('#incomeModalAmount').val(data[1]);
+			$('#incomeModalDate').val(data[2]);
+			$('#incomeModalComment').val(data[3]);
+			$('#incomeModalId').val(data[4]);
+			
+		});
+		
+		$('.editExpenseBtn').on('click',function() {
+			$('#editExpenseModal').modal('show');
+			
+			$tr = $(this).closest('tr');
+			var data = $tr.children("td").map(function() {
+				return $(this).text();
+			}).get();
+			
+			$('#expenseCategoryModal').val(data[0]);
+			$('#expenseModalAmount').val(data[1]);
+			$('#expensePaymentCategoryModal').val(data[2]);
+			$('#expenseModalDate').val(data[3]);
+			$('#expenseModalComment').val(data[4]);
+			$('#expenseModalId').val(data[5]);
+		
+		
+		});
+});
+</script>
+
+<main>
+		
+		<section>
+				
+			<div class="container col-11 col-lg-8 text-center mt-5">
+			
+				<header>
+						<h3 class="h4 mt-4">Przegląd finansów</h3>
+				</header>
+				
+				<form method="post">
+				
+				<div class="input-center">
+					<span class="span-style">
+						<i class="bi bi-calendar"></i>
+					</span>
+						<div class="input-style" style="float: left;">
+							<select id="periodOfTime" data-live-search="true" name="periodOfTime">
+								<option value="" selected disabled>Wybierz okres</option>
+								<option value="currentMonth">Obecny miesiąc</option>
+								<option value="previousMonth">Poprzedni miesiąc</option>
+								<option value="currentYear">Obecny rok</option>
+								<option value="customPeriod">Niestandardowy</option>
+							</select>
+						</div>
+						<div class="clearclass">
+						</div>
+					</div>
+					
+					<div class='col-12 text-center'><h4 class='mt-5 mb-xl-4 balanceDates'>Bilans z okresu: {{ firstDate|date('d/m/Y') }} - {{ secondDate|date('d/m/Y')}}</h4></div>
+								
+					<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="okresRozliczeniowy" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+						
+							<div class="modal-content ">
+							
+								<div class="modal-header">
+									<h4 id="okresRozliczeniowy" class="modal-title text-dark">Wybierz zakres dat</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								
+								<div class="modal-body">
+									<div class="input-center">
+										<div class="input-group-prepend">
+											<span class="span-style"> <i class="bi bi-hourglass-top"></i> </span>
+										</div>
+										<input id="startDate" type="date" class="input-span" aria-label="data" name="startDate" value="{{ yesterdaysDate }}" required>
+									</div>	
+									
+									<div class="input-center">
+										<div class="input-group-prepend">
+											<span class="span-style"> <i class="bi bi-hourglass-bottom"></i></i> </span>
+										</div>
+										<input id="endDate" type="date" class="input-span" aria-label="data" name ="endDate" value="{{ todaysDate }}" required>
+									</div>		
+								</div>
+								
+								<div class="modal-footer input-center">
+									<input type="submit" id="modalCloseBtn" value="Potwierdź">
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+					
+				</form>
+				
+
+				<div style="margin-top: 50px;" class="table-div">
+				
+					<div class="table-title">
+					<h3 class="h4 mt-4">Przychody </h3>
+					</div>
+					
+					<table id="myTable2" class="table-style table-text table-hover table-active" style="margin: auto;" >
+						<thead style="text-align:center; background-color: grey; cursor: pointer;">
+						<tr>
+						<th style="width: 210px;" onclick="sortTableAlphabetically('myTable2')" scope="col">Kategoria<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:210px;" onclick="sortTableNumerically('myTable2')" scope="col">Kwota<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:240px;" onclick="sortTableNumerically('myTable2')" scope="col">Data<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:290px;"  scope="col">Komentarz</th>
+						<th style="display:none;"> id</th>
+						<th width="width:40px;"></th>
+						</tr>
+						</thead>
+						<tbody  style="text-align:center;">
+						
+							{% for incomeCategoryAmount in incomeCategoriesInDetail %}
+								<tr class="editIncomeBtn">
+									<td>{{ incomeCategoryAmount.name }}</td>
+									<td>{{ incomeCategoryAmount.amount }}</td>
+									<td>{{ incomeCategoryAmount.date_of_income }}</td>
+									<td>{{ incomeCategoryAmount.income_comment }}</td>
+									<td style="display:none;">{{ incomeCategoryAmount.id }}</td>
+									<td><i class="bi bi-pencil-square edit-icon"></i></td></tr>
+								</tr>
+							{% endfor %}
+							
+						</tbody>
+					</table>
+				</div>
+		
+				
+				<div style="margin-top: 50px; margin-bottom:100px;" class="table-div">
+				
+					<div class="table-title">
+					<h3 class="h4 mt-4">Wydatki</h3>
+					</div>
+					
+					<table id="myTable3" class="table-style table-text table-hover table-active" style="margin: auto;" >
+						<thead style="text-align:center; background-color: grey; cursor: pointer;">
+						<tr>
+						<th style="width:210px;" onclick="sortTableAlphabetically('myTable3')" scope="col">Kategoria<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:170px;" onclick="sortTableNumerically('myTable3')">Kwota<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:170px;" scope="col">Metoda płatności<span></span></th>
+						<th style="width:210px;" onclick="sortTableNumerically('myTable3')">Data<span> <i class="demo-icon icon-arrow-combo"></i></span></th>
+						<th style="width:192px;" scope="col">Komentarz</th>
+						<th style="display:none;"> id</th>
+						<th width="width:40px;"></th>
+						</tr>
+						</thead>
+						<tbody  style="text-align:center;">
+							
+							{% for expenseCategoryAmount in expenseCategoriesInDetail %}
+								<tr class="editExpenseBtn">
+									<td>{{ expenseCategoryAmount.name }}</td>
+									<td>{{ expenseCategoryAmount.amount }}</td>
+									<td>{{ expenseCategoryAmount.payment }}</td>
+									<td>{{ expenseCategoryAmount.date_of_expense }}</td>
+									<td>{{ expenseCategoryAmount.expense_comment }}</td>
+									<td style="display:none;">{{ expenseCategoryAmount.id }}</td>
+									<td><i class="bi bi-pencil-square edit-icon"></i></td></tr>
+								</tr>
+							{% endfor %}
+						
+						</tbody>
+					</table>
+				</div>
+				
+				<h3 class='h4 mt-4'> BILANS: {{balance[0]}} PLN </h3> 
+				
+				{% if (balance[0] != 0) %}
+				
+				<h3 class='h4 mt-4 {{balanceNote[1]}}'>{{balanceNote[0]}} </h3>
+				
+				<div  class='col-12 center '  id='piechart1'></div>	
+				{% endif %}
+				
+				<!--  modal edycja wydatkow-->
+				<div class="modal fade" id="editExpenseModal" tabindex="-1" role="dialog" aria-labelledby="edytujWydatek" aria-hidden="true" >
+					<div class="modal-dialog" role="document">
+						<div class="modal-content text-dark">
+						
+							<div class="modal-header">
+								<h4 id="edytujWydatek" class="modal-title">Edytuj wydatek</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							
+							<form action="" method="post">
+							
+								<div class="modal-body">
+								
+									<input type="hidden" id="expenseModalId" name="expenseId">
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-wallet-fill"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<input id="expenseModalAmount" type="number" class="form-control"  placeholder="Kwota" min="0" max="999999.99" step="0.01" aria-label="kwota" name="amount" required autofocus >
+										</div>
+										<div class="clearclass">
+										</div>
+									</div>
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-calendar"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<input id="expenseModalDate" type="date" class="form-control" aria-label="data" name="expenseDate" min="2000-01-01" max="{{ lastDate }}" required>
+										</div>
+										<div class="clearclass">
+										</div>
+									</div>
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-card-list"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<select id="expensePaymentCategoryModal"  data-live-search="true" name="paymentMethod">
+												{% for paymentMethod in paymentMethods %}
+													<option>{{ paymentMethod.name }}</option>
+												{% endfor %}
+													<option>Inne</option>
+											</select>
+										</div>
+										<div class="clearclass">
+										</div>	
+									</div>
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-card-list"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<select id="expenseCategoryModal" data-live-search="true" name="expenseCategory">
+												{% for userExpense in userExpenses %}
+													<option>{{ userExpense.name }}</option>
+												{% endfor %}
+													<option>Inne</option>
+											</select>
+										</div>
+										<div class="clearclass">
+										</div>	
+									</div>
+									
+									<div style="margin-top: 15px;">
+										<div><label for="komentarz"> Komentarz (opcjonalnie):</label></div>
+										<textarea name="comment" id="comment" rows="4" cols="80" maxlength="120" minlength="1"></textarea>
+									</div>
+													
+										
+								</div>
+																	
+								<div class="modal-footer">
+									<button id="incomeModalSubmit" formaction="/balance/updateExpense" type="submit" class="btn btn-secondary">Potwierdź</button>
+									<button type="submit" formaction="/balance/deleteExpense" class="btn btn-dark">Usuń wydatek</button>
+								</div>
+							</form>	
+						</div>
+						
+					</div>
+				</div>
+				
+
+					<!--  modal edycja przychodow --->
+					
+				<div class="modal fade" id="editIncomeModal" tabindex="-1" role="dialog" aria-labelledby="edytujPrzychod" aria-hidden="true" >
+					<div class="modal-dialog" role="document">
+						<div class="modal-content text-dark">
+							<div class="modal-header">
+								<h4 id="edytujPrzychod" class="modal-title">Edytuj przychód</h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<form action="" method="post" id='editIncomeForm'>
+								<div class="modal-body">
+								
+									<input type="hidden" id="incomeModalId" name="incomeId">
+								
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-wallet-fill"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<input id="incomeModalAmount" type="number"  placeholder="Kwota" min="0" max="999999.99" step="0.01" aria-label="kwota" name="amount" required autofocus >
+										</div>
+										<div class="clearclass">
+										</div>
+									</div>
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-calendar"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<input id="incomeModalDate" type="date"  aria-label="data" name="incomeDate" min="2000-01-01" max="{{ lastDate }}" required>
+										</div>
+										<div class="clearclass">
+										</div>
+									</div>									
+									
+									<div class="input-center">
+										<span class="span-style">
+											<i class="bi bi-cart"></i>
+										</span>
+										<div class="input-style" style="float: left;">
+											<select id="incomeCategoryModal"data-live-search="true" name="incomeCategory">
+												{% for userIncome in userIncomes %}
+													<option>{{ userIncome.name }}</option>
+												{% endfor %}		
+												<option>Inne</option>
+											</select>
+										</div>
+										<div class="clearclass">
+										</div>	
+									</div>
+									
+									<div style="margin-top: 15px;">
+										<div><label for="comment"> Komentarz (opcjonalnie):</label></div>
+										<textarea  name="comment"  id="incomeModalComment"  rows="4" cols="80" maxlength="120" minlength="1"></textarea>
+									</div>
+										
+										
+								</div>
+																	
+								<div class="modal-footer">
+									<button id="incomeModalSubmit" formaction="/balance/updateIncome"  type="submit" class="btn btn-secondary">Potwierdź</button>
+									<button type="submit" formaction="/balance/deleteIncome" class="btn btn-dark">Usuń przychód</button>
+								</div>
+								
+							</form>	
+						</div>
+						
+					</div>
+					
+		
+				</div>					
+			
+				
+			</div>
+		
+	</section>
+		
+</main>
+	
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
+<script>
+$( ".custom-select" ).change(function() {
+  if (this.value == "customPeriod"){
+			$('.modal-bg').addClass('bg-active');
+        };
+});
+</scipt>
+
+
+<script type="text/javascript">
+
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawChart);
+	
+	 //var exp= echo json_encode($exp) 
+	 var exp = parseInt('<?php echo $expenses_balance; ?>');
+	 var inc = parseInt('<?php echo $incomes_balance; ?>');
+	 console.log(exp);
+
+	function drawChart() {
+		 // Optional; add a title and set the width and height of the chart
+	  var data = google.visualization.arrayToDataTable([
+	  ['What', 'How'],
+	  ['Wydatki', exp],
+	  ['Przychody', inc],
+	]);
+ 
+	  // Optional; add a title and set the width and height of the chart
+	  var options = { 'width':500, 'height':300, backgroundColor: 'transparent', legend: {textStyle: {color: 'lightgrey'}},  titleTextStyle: {color: 'lightgrey', fontSize:'16'}};
+
+	  // Display the chart inside the <div> element with id="piechart"
+	  var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+	  chart.draw(data, options);
+	}
+	
+</script>
+
+
+<script>
+	$('#periodOfTime').change(function(){
+		if (this.value == "customPeriod"){
+			document.getElementById("periodOfTime").setAttribute("onclick","");
+			$('#dateModal').modal({
+				show: true
+			
+			});
+		} else
+		{
+			document.getElementById("periodOfTime").setAttribute("onclick","this.form.submit()");
+		}
+	});
+</script>
+
+<script type="text/javascript">
+
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawChart);
+		
+		 //var exp= echo json_encode($exp) 
+		 var exp = parseInt({{balance[2]}});
+		 var inc = parseInt({{balance[1]}});
+		 console.log(exp);
+
+		function drawChart() {
+			 // Optional; add a title and set the width and height of the chart
+		  var data = google.visualization.arrayToDataTable([
+		  ['What', 'How'],
+		  ['Wydatki', exp],
+		  ['Przychody', inc],
+		]);
+	 
+		  // Optional; add a title and set the width and height of the chart
+		  var options = { 'width':500, 'height':300, backgroundColor: 'transparent', legend: {textStyle: {color: 'lightgrey'}},  titleTextStyle: {color: 'lightgrey', fontSize:'16'}};
+
+		  // Display the chart inside the <div> element with id="piechart"
+		  var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+		  chart.draw(data, options);
+		}
+		
+	</script>
+
+
+{% endblock %}

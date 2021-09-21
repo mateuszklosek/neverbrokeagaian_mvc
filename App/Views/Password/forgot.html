@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+
+<body>
+
+	<main>
+	
+		<div class="container col-11 col-lg-6 col-xl-4 text-center">
+		
+			<header>
+				<a href="/"> 
+					<img class="img-fluid mt-5 border rounded" src="/img/Logo1.png" alt="logo">
+				</a>
+				<!-- <h1>NEVER BROKE AGAIN</h1>-->
+			</header>
+			
+			<section>
+			
+				<div class="row">
+						
+					<header style="width: 100%" class="text-center">
+					
+						<h1 class="h4" style="margin-top:45px;"> Resetowanie hasła </h1>
+					
+					</header>
+						
+					<form style="width: 100%" class="row"  action="/password/request-reset" method="post">
+					
+						<div class="input-center">
+						
+							<span class="span-style">
+								<i class="demo-icon icon-mail-alt"></i> 
+							</span>
+							
+							<div class="input-style" style="float: left;">
+									<input id="inputEmail" type="email" name="email" placeholder="Email" autofocus required aria-label="email" required>
+							</div>
+							
+							<div class="clearclass">
+							</div>
+							
+						</div>
+
+						<div class="input-center mb-5"  >
+							<input type="submit"  value="Wyślij">
+						</div>
+				
+					</form>
+												
+				</div>
+				
+			</section>
+			
+		</div>
+
+
+	</main>
+	
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+</body>
+	
+
+{% endblock %}

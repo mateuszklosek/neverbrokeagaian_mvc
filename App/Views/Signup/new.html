@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block footer %}
+	
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<script src="/js/app.js"></script>
+	<script src="/js/script.js"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+	
+	
+	<script>
+	$(document).ready(function() {	
+	
+		$.validator.addMethod('validPassword',
+            function(value, element, param) {
+                if (value != '') {
+                    if (value.match(/.*[a-z]+.*/i) == null) {
+                        return false;
+                    }
+                    if (value.match(/.*\d+.*/) == null) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            'Hasło musi zawierać co najmniej 1 literę i 1 cyfrę.'
+        );
+	
+		
+			var userId = '{{ user.id }}';
+			
+			$('#formSignup').validate( {
+				errorClass: 'text-danger',
+				rules: {
+					email: {
+						required: true,
+						email: true,
+						remote: {
+							url: '/account/validateEmail',
+							data: {
+								ignore_id: function() {
+									return userId;
+								}
+							}
+						}
+					},
+					password: {
+						required: true,
+						minlength: 6,
+						maxlength: 20,
+						validPassword: true
+					},
+					name: {
+						maxlength: 20
+					}	
+				},
+				messages: {
+					email: {
+						required: "Pole nie może być puste.",
+						email: "Prosze wpisać poprawny adres e-mail.",
+						remote: "Podany adres e-mail jest zajęty."
+					}, 
+					name: {
+						required: "Pole nie może być puste.",
+						maxlength: "Imię może mieć długość maksymalnie 20 znaków."
+					},
+					password: {
+						required: "Pole nie może być puste.",
+						minlength: "Hasło musi składać się z co najmniej 6 znaków.",
+						maxlength: "Hasło musi składać się z maksymalnie 20 znaków."
+					}
+				},
+				errorPlacement: function ($error, $element) {
+					var name = $element.attr("name");
+
+					$("#error" + name).append($error);
+				}
+
+			});		
+			
+			
+		});
+		
+	</script>
+
+<body>
+
+
+	<main>
+	
+		<div class="container col-11 col-lg-6 col-xl-4 text-center">
+		
+			<header>
+				<a href="/"> 
+						<img class="img-fluid mt-5 border rounded" src="/img/Logo1.png" alt="logo">
+				</a>
+			</header>
+
+			<section>
+				
+				<div class="row">
+				
+					<header style="width: 100%" class="text-center">
+						<h1 class="h4" style="margin-top:45px;"> Rejestracja </h1>
+					</header>
+					
+					<form class="row" method="post" action="/signup/create" id="formSignup">
+			
+						<div class="input-center">
+						
+							<span class="span-style">
+								<i class="demo-icon icon-user"></i>
+							</span>
+							
+							<div class="input-style" style="float: left;">
+									<input id="inputName" type="text" class="form-control" name="name" placeholder="Imię" autofocus value="{{ user.name }}" required aria-label="imie" required>
+							</div>
+							
+							<div class="clearclass">
+							</div>
+							
+							
+						</div>
+						
+						<div class="input-center">
+							<small id="errorname"></small>
+							<span class="text-danger">{{ user.errors.name }}</span>
+						</div>
+		
+						<div class="input-center">
+						
+							<span class="span-style">
+								<i class="demo-icon icon-mail-alt"></i> 
+							</span>		
+							
+							<div class="input-style" style="float: left;">
+								<input id="inputEmail" type="email" class="form-control"  name="email" placeholder="Email" value="{{ user.email }}" required aria-label="email" >
+							</div>			
+							
+							<div class="clearclass">						
+							</div>
+							
+							
+						</div>
+						
+						<div class="input-center">
+							<small id="erroremail"></small>
+							<span class="text-danger">{{ user.errors.email }}</span>
+						</div>
+
+						<div class="input-center">
+						
+							<span class="span-style">
+								<i class="demo-icon icon-lock"></i>
+							</span>
+							
+							<div class="input-password">
+								<input type="password" class="form-control"  id="inputPassword" name="password" placeholder="Hasło" required aria-label="hasło" required >
+								<i class="demo-icon icon-eye" onClick="showPwd('inputPassword', this)"></i> 
+							</div>
+							
+							<div class="clearclass">
+							</div>
+							
+							
+						</div>
+						
+						<div class="input-center">
+							<small id="errorpassword"></small>
+							<span class="text-danger">{{ user.errors.password }}</span>
+						</div>
+						
+						<div class="input-center">
+							<div class="g-recaptcha input-center mt-3" data-sitekey="6Ldchj4bAAAAAENmAWleST219qIv0PU3PIxanwzr"></div>
+						</div>
+						
+						<div class="input-center">
+							<!--
+							6LewHtwaAAAAAGhwC7ZHVxb35AibFgO7v4O5DnIp - localhost -->
+							<span class="text-danger">{{ user.errors.captcha }}</span>
+						</div>
+						
+						<div class="input-center">
+							<input type="submit"  value="Rejestracja"> 
+						</div>
+						
+
+					</form>
+
+					<span class="menu-span mb-4">
+						Masz konto? <a href="/login/new">Zaloguj się</a>
+					</span>
+				
+				</div>
+			
+			</section>
+			
+		</div>
+	
+	</main>
+	<footer class="text-center" style="font-size: 12px;">
+			All rights reserved © 2021, Never broke again created by Mati
+	</footer>
+	
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+</body>
+{% endblock %}

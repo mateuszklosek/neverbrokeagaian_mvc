@@ -1,0 +1,68 @@
+[12-Sep-2021 09:58:51 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:02:14 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:02:54 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:03:02 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:03:16 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:03:18 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:04:24 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:04:35 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:05:07 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:05:48 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:06:01 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:06:55 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:07:17 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:07:19 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:07:38 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:07:47 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130
+[12-Sep-2021 10:09:11 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\php-mvc-master\public\index.php(44): Core\Router->dispatch('incomes.php')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\php-mvc-master\Core\Router.php' on line 130

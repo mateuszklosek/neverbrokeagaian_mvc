@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Reset password{% endblock %}
+
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+    <script src="/js/app.js"></script>
+	<script src="/js/script.js"></script>
+
+{% endblock %}
+
+{% block body %}
+
+<body>
+
+{% if user.errors is not empty %}
+	<ul class=" text-danger text-center">
+		{% for error in user.errors %}
+			<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+{% endif %}
+
+	<main>
+
+		<div class="container col-11 col-lg-6 col-xl-4 text-center">
+
+			<div class="row">
+									
+				<header style="width: 100%" class="text-center">
+
+					<h1 class="h4" style="margin-top:45px;"> Resetowanie hasła </h1>
+
+				</header>
+				
+				 <form style="width: 100%" class="row" method="post" id="formPassword" action="/password/reset-password">
+
+					<input type="hidden" name="token" value="{{ token }}" />
+					
+					<div class="input-center">
+					
+						<span class="span-style">
+							<i class="demo-icon icon-lock"></i>
+						</span>
+						
+						<div class="input-password">
+							<input type="password" class="form-control" placeholder="Hasło" aria-label="hasło"  id="inputPassword" name="password" required >
+							<i class="demo-icon icon-eye" onClick="showPwd('inputPassword', this)"></i> 
+						</div>
+						
+						<div class="clearclass">
+						</div>
+						
+					</div>
+					
+					<div class="input-center mb-5"  >
+						<input type="submit"  value="Zresetuj">
+					</div>
+
+				</form>
+					
+			</div>
+
+		</div>
+		
+	</main>
+
+</body>
+
+{% endblock %}
