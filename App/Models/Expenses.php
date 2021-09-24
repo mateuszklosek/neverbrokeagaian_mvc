@@ -164,7 +164,7 @@ class Expenses extends \Core\Model
 		}	
 		
     }
-	
+
 	protected function validateAndConvertPriceFormat() 
 	{
 		if(preg_match("/^\-?[0-9]*\.?[0-9]+\z/", $this->amount)) {
@@ -224,12 +224,18 @@ class Expenses extends \Core\Model
 			return false;
 		}
 		
-		$sql = "UPDATE expenses_category_assigned_to_users SET name = :name WHERE id = :id";
+		$sql = "UPDATE expenses_category_assigned_to_users SET name = :name, categoryLimit = :limit WHERE id = :id";
 		
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
 		
+		$this->amount = $this->validateAndConvertPriceFormat();
 		
+		if($this->amount == "") {
+			$stmt->bindValue(':limit', NULL, PDO::PARAM_STR);
+		} else {
+			$stmt->bindValue(':limit',	$this->amount, PDO::PARAM_STR);
+		}
 		$stmt->bindValue(':id', $this->expenseCategoryId, PDO::PARAM_INT);
 		$stmt->bindValue(':name', $this->expenseCategory, PDO::PARAM_STR);
 		
@@ -374,7 +380,7 @@ class Expenses extends \Core\Model
 	{		
 		if ($this->validateNewCategoryName()) {
 			
-			$sql = "INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :user_id, :name)";
+			$sql = "INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :user_id, :name, NULL)";
 									
 			$db = static::getDB();
             $stmt = $db->prepare($sql);

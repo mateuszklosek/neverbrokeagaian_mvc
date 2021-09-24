@@ -39,7 +39,8 @@
 				}).get();
 				
 				$('#expenseCategoryModal').val(data[0]);
-				$('#expenseCategoryIdModal').val(data[2]);
+				$('#expenseLimitModal').val(data[1]);
+				$('#expenseCategoryIdModal').val(data[3]);
 				
 			});			
 			
@@ -285,6 +286,7 @@
 									<thead>	
 										<tr>
 										<th onclick="sortTableAlphabetically('tableOfExpensesCategories')" scope="col">Kategoria <i class="demo-icon icon-arrow-combo"></i></th>
+										<th onclick="sortTableNumerically('tableOfExpensesCategories')" scope="col" style="width: 20%" scope="col">Limit <i class="demo-icon icon-arrow-combo"></i></th>
 										<th scope="col" style="width: 5%"></th>
 										</tr>
 									</thead>
@@ -293,6 +295,7 @@
 										{% for userExpense in userExpenses %}
 										<tr class="editExpenseBtn">
 											<td>{{ userExpense.name }}</td>
+											<td>{{ userExpense.categoryLimit }}</td>
 											<td><i class="bi bi-pencil-square edit-icon"></i></td>
 											<td style="display:none;">{{ userExpense.id }}</td>
 										</tr>
@@ -318,15 +321,28 @@
 									  <span aria-hidden="true">&times;</span>
 									</button>
 								</div>
-								<form action="" method="post" id='editIncomeForm'>
+								<form action="" method="post" id='editExpenseForm'>
 									<div class="modal-body">
+									
 										<input type="hidden" id="expenseCategoryIdModal" name="expenseCategoryId">
+										
 										<div class="input-group mb-3">
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="bi bi-cart"></i></span>
 											</div>
 											<input type="text" id="expenseCategoryModal" class="form-control"  placeholder="Kategoria wydatków" maxlength="40" step="any" aria-label="KategoriaWydatków" name="expenseCategory" required >
-										</div>		
+										</div>
+										
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="	bi bi-exclamation-diamond"></i></span>
+											</div>
+											<input type="text" id="expenseLimitModal" class="form-control" step="0.01" min="0" max="999999.99"  placeholder="Limit (opcjonalne)" aria-label="limitKategorii" name="amount">
+										</div>
+										
+										<div>
+											<small>Pozostaw puste, by pozbyć się limitu.</small>
+										</div>
 									</div>
 																		
 									<div class="modal-footer">
@@ -334,6 +350,7 @@
 										<button type="submit" formaction="/settings/deleteExpenseCategory" class="btn btn-dark">Usuń kategorię</button>
 									</div>
 									
+						
 								</form>	
 							</div>
 							
@@ -356,7 +373,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="bi bi-cart"></i></span>
 											</div>
-											<input type="text" class="form-control" placeholder="Ktegoria wydatków" aria-label="KategoriaWydatku" name="newExpenseCategory"  required>
+											<input type="text" class="form-control" placeholder="Kategoria wydatków" aria-label="KategoriaWydatku" name="newExpenseCategory"  required>
 										</div>
 									  </div>
 									  
@@ -393,7 +410,8 @@
 								
 								<tbody>
 									{% for paymentMethod in paymentMethods %}
-									<tr class="editPaymentBtn"><td>{{ paymentMethod.name }}</td>
+									<tr class="editPaymentBtn">
+									<td>{{ paymentMethod.name }}</td>
 									<td><i class="bi bi-pencil-square edit-icon"></i></td>
 									<td style="display:none;">{{ paymentMethod.id }}</td></tr>
 									{% endfor %}
@@ -422,7 +440,7 @@
 										<input type="hidden" id="paymentIdModal" name="paymentId">
 										<div class="input-group">
 											<div class="input-group-prepend">
-												<span class="input-group-text"><i class="fas fa-money-check"></i></span>
+												<span class="input-group-text"><i class="bi bi-cart"></i></span>
 											</div>
 											<input type="text" id="paymentModal" class="form-control"  placeholder="Metoda płatności" maxlength="30" step="any" aria-label="MetodaPlatnosci" name="paymentCategory" required >
 										</div>
